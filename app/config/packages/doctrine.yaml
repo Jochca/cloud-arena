@@ -21,12 +21,12 @@ doctrine:
           dir: '%kernel.project_dir%/src/Player/Entity'
           prefix: 'App\Player\Entity'
           alias: Player
-#        Task:
-#          is_bundle: false
-#          type: attribute
-#          dir: '%kernel.project_dir%/app/src/Task/Entity'
-#          prefix: 'App\Task\Entity'
-#          alias: Task
+        Task:
+          is_bundle: false
+          type: attribute
+          dir: '%kernel.project_dir%/src/Task/Entity'
+          prefix: 'App\Task\Entity'
+          alias: Task
         Session:
           is_bundle: false
           type: attribute
