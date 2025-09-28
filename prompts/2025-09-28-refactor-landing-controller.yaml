@@ -1,0 +1,8 @@
+name: Create LandingController with index method
+description: Add LandingController in App/Session/Controller with an index method to render home.html.twig with WeekCount data.
+date: 2025-09-28
+content: |
+  Create LandningController in App/Session/Controller. There define method index() which should redirect to view home.html.twig with all needed data:
+  WeekCount is number of SessionScoring within our SessionObject increased by 1
+  You need to retrieve your session from Player obejct. Create a temporary solution for the sake of development and set player as fixed query in entityManager that gets player with Id "42e02fdb-140e-44f7-bcff-1cf0a0e20329"
+

@@ -1,5 +1,5 @@
 controllers:
     resource:
-        path: ../src/Player/Controller/
-        namespace: App\Player\Controller
+        path: ../src/Session/Controller/
+        namespace: App\Session\Controller
     type: attribute
