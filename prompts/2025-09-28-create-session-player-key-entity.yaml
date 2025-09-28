@@ -1,0 +1,11 @@
+name: Create SessionPlayerKey entity with OneToOne relations
+description: Add SessionPlayerKey entity with uuid, OneToOne relation to Player, OneToOne relation to Session, and integer key. Use Doctrine ORM attributes and PHP 8.4+ features.
+date: 2025-09-28
+content: |
+  Create SessionPlayerKey entity, it should be placed in App/Session/Entity and contain fileds:
+  - uuid
+  - OtO relation with Player
+  - OtO relation with Session
+  - key (integer)
+  All properties should contain getters and setters.
+
