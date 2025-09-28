@@ -1,31 +1,39 @@
 # Copilot Instructions
 
 ## Project structure
-- All application code resides in the `src/` directory.
-- The structure is based on **modules** – each module contains its own `Entity/`, `Command/`, `Query/`, and `Repository/` directories.
-- **Command/Handler** classes handle operations that modify the state.
-- **Query/Handler** classes handle operations that read data.
+- All application code resides in the `app/src/` directory.
+- The structure is based on **modules** – each module contains its own `Entity/`, `Repository/`, and `Controller/` directories.
+- **Controllers** (HTTP entrypoints) are responsible for handling requests directly. Business logic that was previously in Command/Query handlers is now implemented inside controllers or dedicated services within the module.
 - **Repository** classes contain direct database access implementations (Doctrine), without interfaces or adapters.
-- **Controllers** (HTTP entrypoints) are located in `src/Controller/`. Their only responsibility is to dispatch the appropriate command or query.
 
 Example module:
 ```
-src/Task/
+app/src/Task/
   Entity/Task.php
-  Command/AddTaskCommand.php
-  Command/AddTaskHandler.php
-  Query/GetTasksForPlayerQuery.php
-  Query/GetTasksForPlayerHandler.php
   Repository/TaskRepository.php
+  Controller/TaskController.php
 ```
 
 ## Coding guidelines
-- Use PHP 8.3+ and Symfony 6.4+.
+- Use PHP 8.4+ and Symfony 6.4+.
 - Each new feature should be implemented inside the appropriate module (e.g., `Task`, `Player`, `Competition`).
-- Handlers should be named with the `Handler.php` suffix, commands and queries with `Command.php` / `Query.php`.
-- Doctrine entities should be placed under `Entity/` with mapping defined in XML.
-- Follow TDD/BDD mindset: write a test scenario first, then implement the code.
-- Tests are stored in the `tests/` directory, mirroring the structure of `src/`.
+- Take full advantage of PHP 8.4 features, such as:
+    - **Class property promotion** in constructors.
+    - **Real getters/setters** instead of ad-hoc functions.
+    - Attributes for Doctrine entity mapping.
+    - Typed properties everywhere.
+- Example of getters/setters in PHP 8.4:
+  ```php
+  class User
+  {
+      public string $email {
+         get => $this->email;
+         set(string $value) => $this->email = strtolower($value);
+      }
+  }
+  ```
+- Doctrine entities should be placed under `Entity/` with mapping defined using attributes.
+- Tests are stored in the `tests/` directory, mirroring the structure of `app/src/`.
 
 ## AI-Driven Development workflow
 - Every prompt describing a new feature should be stored under `/prompts` as a `.yaml` file.
@@ -42,5 +50,11 @@ src/Task/
 ## Commits
 - At the end of the AI-generated output, always provide a suggested commit message in the **Conventional Commits** format, e.g.:
   ```
-  feat(task): add AddTaskCommand and AddTaskHandler
+  feat(task): add TaskController with basic CRUD endpoints
+  ```
+
+## Execution inside containers
+- Every Symfony console command must be executed inside the PHP container, e.g.:
+  ```bash
+  docker compose exec php php bin/console c:c
   

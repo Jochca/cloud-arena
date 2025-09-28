@@ -1,4 +1,4 @@
-FROM php:8.3-fpm-alpine AS builder
+FROM php:8.4-fpm-alpine AS builder
 
 # Install system dependencies required for building PHP extensions and running Composer
 RUN apk add --no-cache \
@@ -40,7 +40,7 @@ RUN composer install --no-interaction --prefer-dist --optimize-autoloader \
 
 
 # ---------------- RUNTIME ----------------
-FROM php:8.3-fpm-alpine AS runtime
+FROM php:8.4-fpm-alpine AS runtime
 
 # Install dependencies for extensions and Xdebug
 RUN apk add --no-cache $PHPIZE_DEPS linux-headers \

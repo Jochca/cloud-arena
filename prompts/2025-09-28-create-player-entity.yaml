@@ -1,0 +1,6 @@
+name: Create Player entity with Gender enum
+description: Add Player entity with Uuid, Name, and Gender (as enum) fields, using Doctrine ORM attributes and PHP 8.4+ features
+date: 2025-09-28
+content: |
+  Create Player entity located in Player/Entity. It should contain orm entity attributes and fields: Uuid Name Gender (as enum, you need to create it in Player/ValueObjects). All properties should have getter and setter
+
