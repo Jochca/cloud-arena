@@ -1,0 +1,12 @@
+name: Add tasks to session
+
+description: Add tasks property to Session entity and display categorized tasks in home.html.twig
+
+date: 2025-09-28
+
+content: |
+  Add a `tasks` property to the `Session` entity to establish a one-to-many relationship with the `Task` entity. Ensure the `Session` entity has methods to manage this relationship, such as adding and removing tasks.
+
+  Update the `LandingController` to fetch tasks related to a session, categorize them by their status using the `TaskStatus` enum, and pass the categorized tasks to the `home.html.twig` template.
+
+  Modify the `home.html.twig` template to display tasks categorized by their status (`Pending`, `In Progress`, `Completed`) in separate sections. Use the `TaskStatus` enum to ensure consistency when referencing task statuses.

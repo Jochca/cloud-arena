@@ -34,6 +34,11 @@ app/src/Task/
   ```
 - Doctrine entities should be placed under `Entity/` with mapping defined using attributes.
 - Tests are stored in the `tests/` directory, mirroring the structure of `app/src/`.
+- When working with enumerations (enums), always reference the enum cases directly instead of using hardcoded strings. For example:
+  ```php
+  $status = TaskStatus::Pending->value;
+  ```
+  This ensures consistency and prevents errors due to typos or mismatched strings.
 
 ## AI-Driven Development workflow
 - Every prompt describing a new feature should be stored under `/prompts` as a `.yaml` file.
@@ -57,4 +62,4 @@ app/src/Task/
 - Every Symfony console command must be executed inside the PHP container, e.g.:
   ```bash
   docker compose exec php php bin/console c:c
-  
+  ```

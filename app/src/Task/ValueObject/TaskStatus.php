@@ -8,5 +8,5 @@ enum TaskStatus: string
 {
     case Pending = 'pending';
     case InProgress = 'in_progress';
-    case Finished = 'finished';
+    case Completed = 'completed';
 }

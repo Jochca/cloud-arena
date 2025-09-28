@@ -9,6 +9,8 @@ use App\Session\Repository\SessionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Task\Entity\Task;
+use App\Task\ValueObject\TaskStatus;
 
 class LandingController extends AbstractController
 {
@@ -34,6 +36,18 @@ class LandingController extends AbstractController
             throw $this->createNotFoundException('Session not found for the player.');
         }
 
+        // Categorize tasks by status
+        $tasks = $session->getTasks();
+        $categorizedTasks = [
+            TaskStatus::Pending->value => [],
+            TaskStatus::InProgress->value => [],
+            TaskStatus::Completed->value => []
+        ];
+
+        foreach ($tasks as $task) {
+            $categorizedTasks[$task->status->value][] = $task;
+        }
+
         // Calculate WeekCount
         $sessionScoringCount = $this->sessionRepository->countSessionScorings($session);
         $weekCount = $sessionScoringCount + 1;
@@ -41,6 +55,7 @@ class LandingController extends AbstractController
         // Render the view
         return $this->render('home.html.twig', [
             'weekCount' => $weekCount,
+            'tasks' => $categorizedTasks,
         ]);
     }
 }

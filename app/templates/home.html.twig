@@ -1,1 +1,30 @@
 <h1>Trwa {{ weekCount }} tydzień gry!</h1>
+
+<h2>Tasks</h2>
+
+<div>
+    <h3>Pending</h3>
+    <ul>
+        {% for task in tasks.pending %}
+            <li>{{ task.name }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div>
+    <h3>In Progress</h3>
+    <ul>
+        {% for task in tasks.in_progress %}
+            <li>{{ task.name }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div>
+    <h3>Completed</h3>
+    <ul>
+        {% for task in tasks.completed %}
+            <li>{{ task.name }}</li>
+        {% endfor %}
+    </ul>
+</div>
