@@ -1,0 +1,33 @@
+### Symfony ###
+/var/
+/vendor/
+/node_modules/
+/public/bundles/
+/.env.local
+/.env.local.php
+/.env.test.local
+/phpunit.xml
+/phpunit.xml.dist
+
+### Logs ###
+/*.log
+/logs/
+/*.cache
+
+### IDE stuff ###
+/.idea/
+/.vscode/
+/*.swp
+
+### OS junk ###
+.DS_Store
+Thumbs.db
+
+###> friendsofphp/php-cs-fixer ###
+/.php-cs-fixer.php
+/.php-cs-fixer.cache
+###< friendsofphp/php-cs-fixer ###
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###
