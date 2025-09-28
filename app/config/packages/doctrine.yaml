@@ -27,12 +27,12 @@ doctrine:
 #          dir: '%kernel.project_dir%/app/src/Task/Entity'
 #          prefix: 'App\Task\Entity'
 #          alias: Task
-#        Session:
-#          is_bundle: false
-#          type: attribute
-#          dir: '%kernel.project_dir%/app/src/Session/Entity'
-#          prefix: 'App\Session\Entity'
-#          alias: Session
+        Session:
+          is_bundle: false
+          type: attribute
+          dir: '%kernel.project_dir%/src/Session/Entity'
+          prefix: 'App\Session\Entity'
+          alias: Session
 
 when@test:
     doctrine:

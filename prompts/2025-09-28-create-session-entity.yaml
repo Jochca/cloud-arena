@@ -1,0 +1,6 @@
+name: Create Session entity with relation to Player
+description: Add Session entity with uuid and ManyToOne relation to Player, using Doctrine ORM attributes and PHP 8.4+ features
+date: 2025-09-28
+content: |
+  Create Session entity, it should contains fields: uuid, OtM relation to player. Consider App/Session/ directory in doctrine and routes config in the same way as Player. All properties should contain getters and setters
+
