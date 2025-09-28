@@ -1,0 +1,14 @@
+name: Add SessionScoring entity with MtO relation to Session
+description: Update SessionScoring entity to include a ManyToOne relation to Session, along with existing fields and relations.
+date: 2025-09-28
+content: |
+  Create entity SessionScoring, it should contain fields:
+
+  - uuid
+  - date_start (datetime)
+  - date_end (datetime)
+  - winner (MtO relation with player)
+  - session (MtO relation with session)
+
+  All properties should contain getters and setters.
+
