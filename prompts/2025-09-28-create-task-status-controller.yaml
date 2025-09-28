@@ -1,0 +1,16 @@
+name: Create TaskStatusController
+
+description: Implement a controller to update the status of a task
+
+date: 2025-09-28
+
+content: |
+  Create a `TaskStatusController` with a method `update` that handles the `POST /task/{uuid}/update` route. The method should:
+
+  1. Retrieve the task by its UUID using the `TaskRepository`.
+  2. Validate the request body to ensure it contains a `status` field with a value of type `TaskStatus`.
+  3. Update the task's status and validate the entity.
+  4. Persist the changes to the database.
+  5. Return a JSON response indicating success or any errors encountered.
+
+  Ensure the `TaskRepository` is implemented if it does not already exist.
