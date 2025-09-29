@@ -1,0 +1,6 @@
+name: Adjust Player-Session relation to one-to-many
+task: CAR-4
+description: Ensure a Player can only belong to one Session, and a Session can have many Players
+date: 2025-09-29
+content: Adjust entities configuration. Relation between Player and Session should not allow a Player having more than one session and the session have to be able to connect many players
+

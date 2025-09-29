@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Player\Entity;
 
 use App\Player\ValueObjects\Gender;
+use App\Session\Entity\Session;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 
@@ -31,5 +32,11 @@ class Player
         get => $this->gender;
         set(Gender $value) => $this->gender = $value;
     }
-}
 
+    #[ORM\ManyToOne(targetEntity: Session::class, inversedBy: 'players')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    public Session $session {
+        get => $this->session;
+        set(Session $value) => $this->session = $value;
+    }
+}
