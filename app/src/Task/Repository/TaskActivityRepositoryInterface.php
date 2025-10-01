@@ -10,4 +10,6 @@ use App\Task\Entity\TaskActivity;
 interface TaskActivityRepositoryInterface
 {
     public function findActivitiesForSaldoCalculation(Player $player): array;
+
+    public function findExpiredActivities(): array;
 }

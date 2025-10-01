@@ -40,4 +40,18 @@ class TaskActivityRepository extends ServiceEntityRepository implements TaskActi
             ->getQuery()
             ->getResult();
     }
+
+    public function findExpiredActivities(): array
+    {
+        $now = new \DateTimeImmutable();
+
+        return $this->createQueryBuilder('ta')
+            ->where('ta.dateStart < :now')
+            ->andWhere('ta.dateEnd < :now')
+            ->andWhere('ta.status = :inProgressStatus')
+            ->setParameter('now', $now)
+            ->setParameter('inProgressStatus', ActivityStatus::InProgress->value)
+            ->getQuery()
+            ->getResult();
+    }
 }

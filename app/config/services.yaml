@@ -26,4 +26,5 @@ services:
     # Interface bindings
     App\Task\Repository\TaskRepositoryInterface: '@App\Task\Repository\TaskRepository'
     App\Task\Repository\TaskActivityRepositoryInterface: '@App\Task\Repository\TaskActivityRepository'
+    App\Task\Service\ActivityExpirationServiceInterface: '@App\Task\Service\ActivityExpirationService'
     App\Player\Service\PlayerSaldoProviderInterface: '@App\Player\Service\PlayerSaldoProvider'
