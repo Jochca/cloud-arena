@@ -66,5 +66,17 @@ class Task
         get => $this->status;
         set(TaskStatus $value) => $this->status = $value;
     }
-}
 
+    #[ORM\OneToMany(mappedBy: 'task', targetEntity: TaskActivity::class, cascade: ['persist', 'remove'])]
+    public \Doctrine\Common\Collections\Collection $activities;
+
+    public function __construct()
+    {
+        $this->activities = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    public function getActivities(): \Doctrine\Common\Collections\Collection
+    {
+        return $this->activities;
+    }
+}

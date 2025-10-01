@@ -45,5 +45,11 @@ class TaskActivity
         get => $this->status;
         set(ActivityStatus $value) => $this->status = $value;
     }
-}
 
+    #[ORM\ManyToOne(targetEntity: Task::class)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    public Task $task {
+        get => $this->task;
+        set(Task $value) => $this->task = $value;
+    }
+}
