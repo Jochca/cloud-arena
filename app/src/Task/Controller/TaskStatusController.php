@@ -4,54 +4,97 @@ declare(strict_types=1);
 
 namespace App\Task\Controller;
 
+use App\Player\Entity\Player;
+use App\Player\Repository\PlayerRepository;
+use App\Player\Repository\PlayerRepositoryInterface;
 use App\Task\Entity\Task;
 use App\Task\Repository\TaskRepository;
+use App\Task\Service\TaskActivityService;
+use App\Task\ValueObject\TaskAction;
 use App\Task\ValueObject\TaskStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use App\Task\Payload\UpdateTaskStatusPayload;
 
 class TaskStatusController extends AbstractController
 {
     public function __construct(
         private TaskRepository $taskRepository,
-        private EntityManagerInterface $entityManager,
-        private ValidatorInterface $validator
+        private PlayerRepositoryInterface $playerRepository,
+        private TaskActivityService $taskActivityService,
+        private EntityManagerInterface $entityManager
     ) {}
 
-    #[Route('/task/{uuid}/update', name: 'task_update_status', methods: ['POST'])]
-    public function update(string $uuid, Request $request): Response
+    #[Route('/{uuid}', name: 'task_update_status', methods: ['PUT'])]
+    public function update(string $uuid, #[MapRequestPayload] UpdateTaskStatusPayload $payload): Response
     {
+        /* @var Task $task */
         $task = $this->taskRepository->find($uuid);
-
         if (!$task) {
             return $this->json(['error' => 'Task not found.'], Response::HTTP_NOT_FOUND);
         }
 
-        $data = json_decode($request->getContent(), true);
-        if (!isset($data['status'])) {
-            return $this->json(['error' => 'Status is required.'], Response::HTTP_BAD_REQUEST);
+        /* @var Player $player */
+        $player = $this->playerRepository->find($payload->playerId);
+        if (!$player) {
+            return $this->json(['error' => 'Player not found.'], Response::HTTP_NOT_FOUND);
         }
 
         try {
-            $status = TaskStatus::from($data['status']);
+            $action = TaskAction::from($payload->action);
         } catch (\ValueError $e) {
-            return $this->json(['error' => 'Invalid status value.'], Response::HTTP_BAD_REQUEST);
+            return $this->json(['error' => 'Invalid action value.'], Response::HTTP_BAD_REQUEST);
         }
 
-        $task->setStatus($status);
+        // Validate action based on current task status
+        switch ($action) {
+            case TaskAction::Start:
+                if ($task->status !== TaskStatus::Pending) {
+                    return $this->json(['error' => 'Can only start tasks with pending status.'], Response::HTTP_BAD_REQUEST);
+                }
 
-        $errors = $this->validator->validate($task);
-        if (count($errors) > 0) {
-            return $this->json(['error' => (string) $errors], Response::HTTP_BAD_REQUEST);
+                $taskActivity = $this->taskActivityService->createTaskActivity($task, $player);
+                if (!$taskActivity) {
+                    return $this->json(['error' => 'Cannot start task - active activity already exists.'], Response::HTTP_CONFLICT);
+                }
+
+                $task->status = TaskStatus::InProgress;
+                break;
+
+            case TaskAction::Finish:
+                if ($task->status !== TaskStatus::InProgress) {
+                    return $this->json(['error' => 'Can only finish tasks with in_progress status.'], Response::HTTP_BAD_REQUEST);
+                }
+
+                $taskActivity = $this->taskActivityService->finishTaskActivity($task, $player);
+                if (!$taskActivity) {
+                    return $this->json(['error' => 'Cannot finish task - no active activity found.'], Response::HTTP_CONFLICT);
+                }
+
+                $task->status = TaskStatus::Completed;
+                break;
+
+            case TaskAction::Cancel:
+                if ($task->status !== TaskStatus::InProgress) {
+                    return $this->json(['error' => 'Can only cancel tasks with in_progress status.'], Response::HTTP_BAD_REQUEST);
+                }
+
+                $taskActivity = $this->taskActivityService->cancelTaskActivity($task, $player);
+                if (!$taskActivity) {
+                    return $this->json(['error' => 'Cannot cancel task - no active activity found.'], Response::HTTP_CONFLICT);
+                }
+
+                $task->status = TaskStatus::Pending;
+                break;
         }
 
         $this->entityManager->persist($task);
         $this->entityManager->flush();
 
-        return $this->json(['message' => 'Task status updated successfully.']);
+        return $this->json(['message' => 'Task action executed successfully.']);
     }
 }

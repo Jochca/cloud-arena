@@ -1,17 +1,26 @@
 # Copilot Instructions
 
+You are an expert PHP/Symfony developer working on a project that uses AI-assisted development. Follow these guidelines to ensure consistency and quality in the codebase.
+
 ## Project structure
 - All application code resides in the `app/src/` directory.
 - The structure is based on **modules** – each module contains its own `Entity/`, `Repository/`, and `Controller/` directories.
 - **Controllers** (HTTP entrypoints) are responsible for handling requests directly. Business logic that was previously in Command/Query handlers is now implemented inside controllers or dedicated services within the module.
-- **Repository** classes contain direct database access implementations (Doctrine), without interfaces or adapters.
+- **Repository** classes contain direct database access implementations (Doctrine).
+- **Services, repositories, factories, managers, validators, etc.** must always have corresponding **interfaces**.
+    - Interfaces are placed next to implementations in the same module.
+    - All dependencies are injected via **interfaces**, not implementations.
+    - If an existing service/repository is injected directly as a class (implementation), it must be refactored to follow this rule.
 
 Example module:
 ```
 app/src/Task/
   Entity/Task.php
-  Repository/TaskRepository.php
+  Repository/TaskRepositoryInterface.php
+  Repository/DoctrineTaskRepository.php
   Controller/TaskController.php
+  Service/TaskServiceInterface.php
+  Service/TaskService.php
 ```
 
 ## Coding guidelines
@@ -41,14 +50,15 @@ app/src/Task/
   This ensures consistency and prevents errors due to typos or mismatched strings.
 
 ## AI-Driven Development workflow
-- Every prompt describing a new feature should be stored under `/prompts` as a `.yaml` file.
+- Every prompt describing a new feature should be stored under `/prompts` as a `.yaml` file. File name should match the `task` field inside the file.
 - Prompt file structure:
   ```yaml
   name: Prompt name
+  task: CAR-***
   description: Short description of the goal (e.g., "Add PIN + JWT login support")
   date: YYYY-MM-DD
   content: |
-    Full prompt content here
+    ONLY RAW prompt text here, no markdown formatting
   ```
 - Prompts serve as documentation of design decisions and as input material for code generation.
 
@@ -63,3 +73,26 @@ app/src/Task/
   ```bash
   docker compose exec php php bin/console c:c
   ```
+
+## Payloads and Validation
+- For any controller action that receives request data (e.g., POST/PUT/PATCH), always create a dedicated **Payload** object (e.g., `UpdateTaskStatusPayload`) in the appropriate module (usually under `Payload/`).
+- Use Symfony's `#[MapRequestPayload]` attribute in controller actions to map and validate incoming request data to the Payload object.
+- **All validation logic must be defined inside the Payload** using Symfony's `Assert` constraints. Do not perform manual validation or JSON decoding in controllers.
+- Controllers should only orchestrate the flow, relying on the Payload for validation and type safety.
+- Example Payload:
+  ```php
+  class UpdateTaskStatusPayload
+  {
+      #[Assert\NotBlank(message: 'Status is required.')]
+      #[Assert\Choice(callback: [TaskStatus::class, 'cases'], message: 'Invalid status value.')]
+      public string $status;
+  }
+  ```
+- Example controller usage:
+  ```php
+  #[Route('/{uuid}/update', methods: ['POST'])]
+  public function update(string $uuid, #[MapRequestPayload] UpdateTaskStatusPayload $payload): Response
+  {
+      // ...controller logic using $payload...
+  }
+  

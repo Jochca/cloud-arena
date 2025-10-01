@@ -1,5 +1,9 @@
-controllers:
-    resource:
-        path: ../src/Session/Controller/
-        namespace: App\Session\Controller
-    type: attribute
+session_controllers:
+  resource: ../src/Session/Controller/
+  type: attribute
+  prefix: /session
+
+task_controllers:
+  resource: ../src/Task/Controller/
+  type: attribute
+  prefix: /task

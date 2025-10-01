@@ -1,0 +1,15 @@
+wname: Modify TaskStatusController with validation and TaskActivity service
+task: CAR-8
+description: Add validation to prevent completing pending tasks and integrate TaskActivity service for activity tracking
+date: 2025-10-01
+content: |
+  Modify TaskStatusController functionality to:
+  - Validate that a player cannot finish a task with status "pending" (prevent Completed status when current status is Pending)
+  - Create a TaskActivityService that creates TaskActivity records for given Task and Player
+  - Only create TaskActivity if no other TaskActivity exists with status "in_progress" or "finished" for the same task/player combination
+  - Set TaskActivity start date to now and end date to now + 24 hours
+  - Add Player context to the UpdateTaskStatusPayload with UUID validation
+  - Create TaskActivityRepository with method to find active activities
+  - Update controller to use the service when task status changes to InProgress
+  - Return appropriate error responses for validation failures and conflicts
+
