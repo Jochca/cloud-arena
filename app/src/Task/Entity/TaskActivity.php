@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Task\Entity;
 
 use App\Player\Entity\Player;
+use App\Session\Entity\SessionScoring;
 use App\Task\ValueObject\ActivityStatus;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
@@ -51,5 +52,12 @@ class TaskActivity
     public Task $task {
         get => $this->task;
         set(Task $value) => $this->task = $value;
+    }
+
+    #[ORM\ManyToOne(targetEntity: SessionScoring::class)]
+    #[ORM\JoinColumn(onDelete: 'SET NULL', nullable: true)]
+    public ?SessionScoring $scoring {
+        get => $this->scoring;
+        set(?SessionScoring $value) => $this->scoring = $value;
     }
 }

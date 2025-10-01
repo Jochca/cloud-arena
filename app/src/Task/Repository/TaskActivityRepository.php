@@ -24,6 +24,7 @@ class TaskActivityRepository extends ServiceEntityRepository implements TaskActi
             ->where('ta.task = :task')
             ->andWhere('ta.player = :player')
             ->andWhere('ta.status IN (:statuses)')
+            ->andWhere('ta.scoring IS NULL')
             ->setParameter('task', $task)
             ->setParameter('player', $player)
             ->setParameter('statuses', [ActivityStatus::InProgress->value, ActivityStatus::Finished->value])
@@ -36,6 +37,7 @@ class TaskActivityRepository extends ServiceEntityRepository implements TaskActi
         return $this->createQueryBuilder('ta')
             ->leftJoin('ta.task', 't')
             ->where('ta.player = :player')
+            ->andWhere('ta.scoring IS NULL')
             ->setParameter('player', $player)
             ->getQuery()
             ->getResult();

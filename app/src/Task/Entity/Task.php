@@ -6,6 +6,7 @@ namespace App\Task\Entity;
 
 use App\Player\Entity\Player;
 use App\Session\Entity\Session;
+use App\Session\Entity\SessionScoring;
 use App\Task\ValueObject\TaskStatus;
 use App\Task\ValueObject\TaskType;
 use Doctrine\ORM\Mapping as ORM;

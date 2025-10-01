@@ -1,0 +1,11 @@
+name: Extend SessionScoring with additional fields and Task relation
+task: CAR-16
+description: Add winner_score, looser, looser_score fields to SessionScoring and scoring_id relation to Task
+date: 2025-10-01
+content: |
+  We need to extend SessionScoring, add fields:
+  - winner_score (int)
+  - looser (Player)
+  - looser_score (int)
+
+  Also add nullable relation field scoring_id (SessionScoring) to Task

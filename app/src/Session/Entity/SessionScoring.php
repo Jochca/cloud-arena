@@ -39,10 +39,41 @@ class SessionScoring
         set(Player $value) => $this->winner = $value;
     }
 
+    #[ORM\Column(type: 'integer')]
+    public int $winnerScore {
+        get => $this->winnerScore;
+        set(int $value) => $this->winnerScore = $value;
+    }
+
+    #[ORM\ManyToOne(targetEntity: Player::class)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    public Player $looser {
+        get => $this->looser;
+        set(Player $value) => $this->looser = $value;
+    }
+
+    #[ORM\Column(type: 'integer')]
+    public int $looserScore {
+        get => $this->looserScore;
+        set(int $value) => $this->looserScore = $value;
+    }
+
     #[ORM\ManyToOne(targetEntity: Session::class)]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     public Session $session {
         get => $this->session;
         set(Session $value) => $this->session = $value;
+    }
+
+    // one to many with TaskActivity
+    #[ORM\OneToMany(targetEntity: 'App\Task\Entity\TaskActivity', mappedBy: 'scoring')]
+    public $taskActivities {
+        get => $this->taskActivities;
+        set($value) => $this->taskActivities = $value;
+    }
+
+    public function __construct()
+    {
+        $this->taskActivities = new \Doctrine\Common\Collections\ArrayCollection();
     }
 }
