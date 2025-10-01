@@ -7,3 +7,8 @@ task_controllers:
   resource: ../src/Task/Controller/
   type: attribute
   prefix: /task
+
+player_controllers:
+  resource: ../src/Player/Controller/
+  type: attribute
+  prefix: /player

@@ -11,7 +11,7 @@ use App\Task\ValueObject\ActivityStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class TaskActivityRepository extends ServiceEntityRepository
+class TaskActivityRepository extends ServiceEntityRepository implements TaskActivityRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -29,5 +29,15 @@ class TaskActivityRepository extends ServiceEntityRepository
             ->setParameter('statuses', [ActivityStatus::InProgress->value, ActivityStatus::Finished->value])
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function findActivitiesForSaldoCalculation(Player $player): array
+    {
+        return $this->createQueryBuilder('ta')
+            ->leftJoin('ta.task', 't')
+            ->where('ta.player = :player')
+            ->setParameter('player', $player)
+            ->getQuery()
+            ->getResult();
     }
 }

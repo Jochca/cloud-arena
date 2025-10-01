@@ -1,0 +1,12 @@
+name: Player Saldo Calculation Controller
+task: CAR-10
+description: Add new controller in Player context to return actual saldo of given player with strict calculation rules
+date: 2025-10-01
+content: |
+  Add new controller in Player context. It needs to implement endpoint which will return actual saldo of given player. We need to define strict rules of calculating saldo:
+  - Exit point is always 0
+  - Its increased by all the activites (connected to task typed as activity) with statsus completed (with value of task which is related to given acitivity)
+  - Its decreded by all the activites  (connected to task typed as activity) with statsus canceled (with value of task which is related to given acitivity)
+  - Its decrased by  all the activites (connected to task typed as duty) which were not completed (with value of task which is related to given acitivity)
+
+  Isolate logic of calculation to some Provider. Controller should only be messenger
