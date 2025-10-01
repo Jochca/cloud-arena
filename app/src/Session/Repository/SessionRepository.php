@@ -22,5 +22,9 @@ class SessionRepository
     {
         return $this->entityManager->getRepository(SessionScoring::class)->count(['session' => $session]);
     }
-}
 
+    public function findAll(): array
+    {
+        return $this->entityManager->getRepository(Session::class)->findAll();
+    }
+}

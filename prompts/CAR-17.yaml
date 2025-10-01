@@ -1,0 +1,10 @@
+name: Create Session Scoring CLI Command
+task: CAR-17
+description: Add CLI command to create session scoring objects on Sundays with saldo calculation and activity linking
+date: 2025-10-01
+content: |
+  Create cli command for creating session scoring obejcts. Functionality should contain:
+  - First check if today's day is last day of the week (Sunday)
+  - If so, get saldo for both of the session players, calculate their saldo and create scoring object with all the data
+  - Gather all the tasks from the session and then all the activities related to them and for those set scoring_id as the new created scoring object id
+

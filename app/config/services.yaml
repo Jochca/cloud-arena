@@ -28,3 +28,4 @@ services:
     App\Task\Repository\TaskActivityRepositoryInterface: '@App\Task\Repository\TaskActivityRepository'
     App\Task\Service\ActivityExpirationServiceInterface: '@App\Task\Service\ActivityExpirationService'
     App\Player\Service\PlayerSaldoProviderInterface: '@App\Player\Service\PlayerSaldoProvider'
+    App\Session\Service\SessionScoringCreatorServiceInterface: '@App\Session\Service\SessionScoringCreatorService'
