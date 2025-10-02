@@ -15,7 +15,9 @@ class SessionRepository
 
     public function findSessionByPlayer(Player $player): ?Session
     {
-        return $this->entityManager->getRepository(Session::class)->findOneBy(['player' => $player]);
+        // Since Player has a ManyToOne relationship with Session,
+        // we can directly access the session from the player
+        return $player->session;
     }
 
     public function countSessionScorings(Session $session): int
@@ -26,5 +28,19 @@ class SessionRepository
     public function findAll(): array
     {
         return $this->entityManager->getRepository(Session::class)->findAll();
+    }
+
+    public function findSessionScoringsByPlayer(Player $player): array
+    {
+        // First find the session for this player
+        $session = $this->findSessionByPlayer($player);
+
+        if (!$session) {
+            return [];
+        }
+
+        // Then find all SessionScorings for that session
+        return $this->entityManager->getRepository(SessionScoring::class)
+            ->findBy(['session' => $session], ['dateStart' => 'DESC']);
     }
 }

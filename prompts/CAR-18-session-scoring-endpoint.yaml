@@ -1,0 +1,7 @@
+name: Session Scoring Retrieval Endpoint
+task: CAR-18
+description: Implement endpoint in Session context to get all SessionScorings from user's assigned session
+date: 2025-10-02
+content: |
+  Implement ednpoint in Session context that will allow user to get all SessionScorings from session to which hes assinged to.
+
