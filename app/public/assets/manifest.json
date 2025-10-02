@@ -1,0 +1,23 @@
+{
+    "@symfony\/stimulus-bundle\/controllers.js": "\/assets\/@symfony\/stimulus-bundle\/controllers-188ff7e85a168fc0ecaa9c89dbc2b5a7.js",
+    "@symfony\/stimulus-bundle\/loader.js": "\/assets\/@symfony\/stimulus-bundle\/loader-5751ad1ee2975e725a94d8121d153d17.js",
+    "@symfony\/ux-react\/components.js": "\/assets\/@symfony\/ux-react\/components-993e09d395c047ad4075d91e746e7774.js",
+    "@symfony\/ux-react\/loader.js": "\/assets\/@symfony\/ux-react\/loader-2ee6c32779aff401476c61d8038dae31.js",
+    "@symfony\/ux-react\/register_controller.js": "\/assets\/@symfony\/ux-react\/register_controller-dd812f81ef43622eaaaade5162cfa27d.js",
+    "@symfony\/ux-react\/render_controller.js": "\/assets\/@symfony\/ux-react\/render_controller-a166b05dd6efeba006877f0d6f501444.js",
+    "@symfony\/ux-turbo\/turbo_controller.js": "\/assets\/@symfony\/ux-turbo\/turbo_controller-f3040d8b6a5a81530e1ea5ec500d1142.js",
+    "@symfony\/ux-turbo\/turbo_stream_controller.js": "\/assets\/@symfony\/ux-turbo\/turbo_stream_controller-2dc2b209912de93ed8105ab931271bb3.js",
+    "app.js": "\/assets\/app-5d80c8695f8c4dbfd8a080754e2c119e.js",
+    "bootstrap.js": "\/assets\/bootstrap-c423b8bbc1f9cae218c105ca8ca9f767.js",
+    "controllers\/hello_controller.js": "\/assets\/controllers\/hello_controller-55882fcad241d2bea50276ea485583bc.js",
+    "react\/components\/HelloWorld.jsx": "\/assets\/react\/components\/HelloWorld-5e7cb91f3bbffd57b682cef6af90cca9.jsx",
+    "react\/controllers\/Hello.jsx": "\/assets\/react\/controllers\/Hello-2059fe6badbfb0af3d047832d57143f1.jsx",
+    "react\/controllers\/hello_controller.js": "\/assets\/react\/controllers\/hello_controller-5dade6549d7084c90ee107ccc37237b2.js",
+    "styles\/app.css": "\/assets\/styles\/app-713d9828d7058036a44786836080554c.css",
+    "vendor\/@hotwired\/stimulus\/stimulus.index.js": "\/assets\/vendor\/@hotwired\/stimulus\/stimulus.index-4b8ccd71e6b1c4ddba22853d5a50a26c.js",
+    "vendor\/@hotwired\/turbo\/turbo.index.js": "\/assets\/vendor\/@hotwired\/turbo\/turbo.index-a53d794fa85309d61a95703410716017.js",
+    "vendor\/react-dom\/client.js": "\/assets\/vendor\/react-dom\/client-946a078d77274e9a1a0410f858d9de5d.js",
+    "vendor\/react-dom\/react-dom.index.js": "\/assets\/vendor\/react-dom\/react-dom.index-ffbc0b0bd1c947506e0e5e92924a8932.js",
+    "vendor\/react\/react.index.js": "\/assets\/vendor\/react\/react.index-40a14fd9bb392c3eb59cd9b7682a44e4.js",
+    "vendor\/scheduler\/scheduler.index.js": "\/assets\/vendor\/scheduler\/scheduler.index-c59192033d00fb597a247acb298425d4.js"
+}

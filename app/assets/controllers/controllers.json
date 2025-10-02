@@ -1,0 +1,9 @@
+{
+  "controllers": {
+    "hello": {
+      "enabled": true,
+      "fetch": "eager",
+      "path": "./hello_controller.js"
+    }
+  }
+}

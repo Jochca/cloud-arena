@@ -1,0 +1,7 @@
+name: Configure React.js Frontend with Simple Homepage
+task: CAR-19
+description: Build frontend in React.js inside project with simple HelloWorld homepage
+date: 2025-10-02
+content: |
+  We want to build frontend in React.js inside our project. Configure simple homepage that will just display HelloWorld but through React. Remember to create commit message
+

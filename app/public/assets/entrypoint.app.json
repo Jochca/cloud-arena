@@ -1,0 +1,19 @@
+[
+    "@symfony\/ux-react",
+    "\/assets\/bootstrap.js",
+    "\/assets\/styles\/app.css",
+    "\/assets\/@symfony\/ux-react\/components.js",
+    "@symfony\/stimulus-bundle",
+    "\/assets\/react\/controllers\/Hello.jsx",
+    "\/assets\/react\/controllers\/hello_controller.js",
+    "@hotwired\/stimulus",
+    "\/assets\/@symfony\/stimulus-bundle\/controllers.js",
+    "\/assets\/@symfony\/ux-react\/render_controller.js",
+    "\/assets\/@symfony\/ux-turbo\/turbo_controller.js",
+    "\/assets\/controllers\/hello_controller.js",
+    "react",
+    "react-dom\/client",
+    "@hotwired\/turbo",
+    "react-dom",
+    "scheduler"
+]
