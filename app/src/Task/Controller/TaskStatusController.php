@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Task\Payload\UpdateTaskStatusPayload;
+use Symfony\Component\Uid\Uuid;
 
 class TaskStatusController extends AbstractController
 {
@@ -32,6 +33,14 @@ class TaskStatusController extends AbstractController
     #[Route('/{uuid}', name: 'task_update_status', methods: ['PUT'])]
     public function update(string $uuid, #[MapRequestPayload] UpdateTaskStatusPayload $payload): Response
     {
+        // Get player ID from JWT token (username contains the player UUID)
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->json(['error' => 'Authentication required.'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $playerId = Uuid::fromString($user->getUserIdentifier());
+
         /* @var Task $task */
         $task = $this->taskRepository->find($uuid);
         if (!$task) {
@@ -39,7 +48,7 @@ class TaskStatusController extends AbstractController
         }
 
         /* @var Player $player */
-        $player = $this->playerRepository->find($payload->playerId);
+        $player = $this->playerRepository->find($playerId);
         if (!$player) {
             return $this->json(['error' => 'Player not found.'], Response::HTTP_NOT_FOUND);
         }

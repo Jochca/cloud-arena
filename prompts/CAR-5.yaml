@@ -1,0 +1,11 @@
+name: JWT Authorization System Implementation
+task: CAR-5
+description: Create JWT-based authorization system with player authentication via SessionPlayerKey
+date: 2025-10-02
+content: |
+  You need to create authorization system. It should base on JWT token that will contain playerId in payload. Login would be performed by passing key from SessionPlayerKey. You need to implement:
+  - JWT creation mechanism
+  - Authorization endpoint
+  - Configure security to cover all endpoints
+  - replace playerId in payload TaskStatusController to id retrieved from token
+

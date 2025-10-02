@@ -29,3 +29,5 @@ services:
     App\Task\Service\ActivityExpirationServiceInterface: '@App\Task\Service\ActivityExpirationService'
     App\Player\Service\PlayerSaldoProviderInterface: '@App\Player\Service\PlayerSaldoProvider'
     App\Session\Service\SessionScoringCreatorServiceInterface: '@App\Session\Service\SessionScoringCreatorService'
+    App\Session\Repository\SessionPlayerKeyRepositoryInterface: '@App\Session\Repository\SessionPlayerKeyRepository'
+    App\Session\Service\AuthenticationServiceInterface: '@App\Session\Service\AuthenticationService'

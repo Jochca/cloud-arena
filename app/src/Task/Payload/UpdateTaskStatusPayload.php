@@ -9,10 +9,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class UpdateTaskStatusPayload
 {
-    #[Assert\NotBlank(message: 'Player ID is required.')]
-    #[Assert\Uuid(message: 'Player ID must be a valid UUID.')]
-    public string $playerId;
-
     #[Assert\NotBlank(message: 'Action is required.')]
     #[Assert\Choice(
         callback: [self::class, 'allowedActions'],
