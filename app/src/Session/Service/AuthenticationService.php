@@ -24,14 +24,12 @@ class AuthenticationService implements AuthenticationServiceInterface
             return null;
         }
 
-        // Create a temporary user object with player ID as username
         $user = new InMemoryUser(
             $sessionPlayerKey->player->id->toRfc4122(),
             '',
             ['ROLE_PLAYER']
         );
 
-        // Create JWT token with player ID in payload
         return $this->jwtManager->create($user);
     }
 }

@@ -1,0 +1,12 @@
+name: Code Structure Cleanup and Standards
+task: CAR-27
+description: Analyze all classes in Auth, Controller, Player, Session, Task contexts and enforce strict code organization standards
+date: 2025-10-03
+content: |
+  Analyze all classes inside our contexts (Auth, Controller, Player, Session, Task) and modify classes in the given way:
+  - Delete all comments
+  - Do NOT EVER return response that is an complex array, if array is more complexed than simple list you have to create an dto class for this data in DTO/ directory of given context  
+  - Do NOT EVER return errors like that $this->json(['error' => 'Player not found'], 404);, all the cases need to have specific exception which will be thrown
+  - Do not create multiple classess in one file, all of the DTOS should be separate classess
+  - Do not create multiple classess in one file, all of the Exceptions should be separate classess
+

@@ -5,8 +5,16 @@ declare(strict_types=1);
 namespace App\Task\Controller;
 
 use App\Player\Entity\Player;
+use App\Player\Exception\PlayerNotFoundException;
 use App\Player\Repository\PlayerRepositoryInterface;
+use App\Session\Exception\AuthenticationRequiredException;
+use App\Task\DTO\TaskActionResponseDTO;
 use App\Task\Entity\Task;
+use App\Task\Exception\InvalidTaskActionException;
+use App\Task\Exception\TaskActivityConflictException;
+use App\Task\Exception\TaskNotFoundException;
+use App\Task\Exception\TaskPermissionException;
+use App\Task\Exception\TaskStatusViolationException;
 use App\Task\Payload\UpdateTaskStatusPayload;
 use App\Task\Repository\TaskRepository;
 use App\Task\Service\TaskActivityService;
@@ -14,7 +22,7 @@ use App\Task\ValueObject\TaskAction;
 use App\Task\ValueObject\TaskStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Uid\Uuid;
@@ -30,44 +38,40 @@ class TaskStatusController extends AbstractController
     }
 
     #[Route('/{uuid}', name: 'task_update_status', methods: ['PUT'])]
-    public function update(string $uuid, #[MapRequestPayload] UpdateTaskStatusPayload $payload): Response
+    public function update(string $uuid, #[MapRequestPayload] UpdateTaskStatusPayload $payload): JsonResponse
     {
-        // Get player ID from JWT token (username contains the player UUID)
         $user = $this->getUser();
         if (!$user) {
-            return $this->json(['error' => 'Authentication required.'], Response::HTTP_UNAUTHORIZED);
+            throw new AuthenticationRequiredException();
         }
 
         $playerId = Uuid::fromString($user->getUserIdentifier());
 
-        /* @var Task $task */
         $task = $this->taskRepository->find($uuid);
-        if (!$task) {
-            return $this->json(['error' => 'Task not found.'], Response::HTTP_NOT_FOUND);
+        if (!$task instanceof Task) {
+            throw new TaskNotFoundException();
         }
 
-        /* @var Player $player */
         $player = $this->playerRepository->find($playerId);
-        if (!$player) {
-            return $this->json(['error' => 'Player not found.'], Response::HTTP_NOT_FOUND);
+        if (!$player instanceof Player) {
+            throw new PlayerNotFoundException();
         }
 
         try {
             $action = TaskAction::from($payload->action);
         } catch (\ValueError $e) {
-            return $this->json(['error' => 'Invalid action value.'], Response::HTTP_BAD_REQUEST);
+            throw new InvalidTaskActionException($payload->action);
         }
 
-        // Validate action based on current task status
         switch ($action) {
             case TaskAction::Start:
                 if (TaskStatus::Pending !== $task->status) {
-                    return $this->json(['error' => 'Can only start tasks with pending status.'], Response::HTTP_BAD_REQUEST);
+                    throw new TaskStatusViolationException('Can only start tasks with pending status');
                 }
 
                 $taskActivity = $this->taskActivityService->createTaskActivity($task, $player);
                 if (!$taskActivity) {
-                    return $this->json(['error' => 'Cannot start task - active activity already exists.'], Response::HTTP_CONFLICT);
+                    throw new TaskActivityConflictException('Cannot start task - active activity already exists');
                 }
 
                 $task->status = TaskStatus::InProgress;
@@ -75,12 +79,12 @@ class TaskStatusController extends AbstractController
 
             case TaskAction::Finish:
                 if (TaskStatus::InProgress !== $task->status) {
-                    return $this->json(['error' => 'Can only finish tasks with in_progress status.'], Response::HTTP_BAD_REQUEST);
+                    throw new TaskStatusViolationException('Can only finish tasks with in_progress status');
                 }
 
                 $taskActivity = $this->taskActivityService->finishTaskActivity($task, $player);
                 if (!$taskActivity) {
-                    return $this->json(['error' => 'Cannot finish task - no active activity found.'], Response::HTTP_CONFLICT);
+                    throw new TaskActivityConflictException('Cannot finish task - no active activity found');
                 }
 
                 $task->status = TaskStatus::Completed;
@@ -88,12 +92,12 @@ class TaskStatusController extends AbstractController
 
             case TaskAction::Cancel:
                 if (TaskStatus::InProgress !== $task->status) {
-                    return $this->json(['error' => 'Can only cancel tasks with in_progress status.'], Response::HTTP_BAD_REQUEST);
+                    throw new TaskStatusViolationException('Can only cancel tasks with in_progress status');
                 }
 
                 $taskActivity = $this->taskActivityService->cancelTaskActivity($task, $player);
                 if (!$taskActivity) {
-                    return $this->json(['error' => 'Cannot cancel task - no active activity found.'], Response::HTTP_CONFLICT);
+                    throw new TaskActivityConflictException('Cannot cancel task - no active activity found');
                 }
 
                 $task->status = TaskStatus::Pending;
@@ -103,12 +107,12 @@ class TaskStatusController extends AbstractController
         if (null === $task->player) {
             $task->player = $player;
         } elseif ($task->player->id !== $player->id) {
-            return $this->json(['error' => 'You can only modify your own tasks.'], Response::HTTP_FORBIDDEN);
+            throw new TaskPermissionException();
         }
 
         $this->entityManager->persist($task);
         $this->entityManager->flush();
 
-        return $this->json(['message' => 'Task action executed successfully.']);
+        $response = new TaskActionResponseDTO('Task action executed successfully');
     }
 }

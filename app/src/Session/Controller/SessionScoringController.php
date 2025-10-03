@@ -5,7 +5,12 @@ declare(strict_types=1);
 namespace App\Session\Controller;
 
 use App\Player\Entity\Player;
+use App\Player\Exception\PlayerNotFoundException;
 use App\Player\Repository\PlayerRepositoryInterface;
+use App\Session\DTO\PlayerInfoDTO;
+use App\Session\DTO\SessionScoringDTO;
+use App\Session\DTO\SessionScoringsResponseDTO;
+use App\Session\Exception\AuthenticationRequiredException;
 use App\Session\Repository\SessionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -23,45 +28,34 @@ class SessionScoringController extends AbstractController
     #[Route('/scorings', methods: ['GET'])]
     public function getSessionScorings(): JsonResponse
     {
-        // Get player ID from JWT token
         $user = $this->getUser();
         if (!$user) {
-            return $this->json(['error' => 'Authentication required.'], 401);
+            throw new AuthenticationRequiredException();
         }
 
         $playerId = Uuid::fromString($user->getUserIdentifier());
 
-        /** @var Player|null $player */
         $player = $this->playerRepository->find($playerId);
-        if (!$player) {
-            return $this->json(['error' => 'Player not found.'], 404);
+        if (!$player instanceof Player) {
+            throw new PlayerNotFoundException();
         }
 
-        // Get all session scorings for this player's session
         $sessionScorings = $this->sessionRepository->findSessionScoringsByPlayer($player);
 
-        // Transform to response format
         $scoringsData = array_map(function ($scoring) {
-            return [
-                'id' => $scoring->id->toRfc4122(),
-                'dateStart' => $scoring->dateStart->format('Y-m-d H:i:s'),
-                'dateEnd' => $scoring->dateEnd->format('Y-m-d H:i:s'),
-                'winner' => [
-                    'id' => $scoring->winner->id->toRfc4122(),
-                    'name' => $scoring->winner->name,
-                ],
-                'winnerScore' => $scoring->winnerScore,
-                'looser' => [
-                    'id' => $scoring->looser->id->toRfc4122(),
-                    'name' => $scoring->looser->name,
-                ],
-                'looserScore' => $scoring->looserScore,
-            ];
+            return new SessionScoringDTO(
+                $scoring->id->toRfc4122(),
+                $scoring->dateStart->format('Y-m-d H:i:s'),
+                $scoring->dateEnd->format('Y-m-d H:i:s'),
+                new PlayerInfoDTO($scoring->winner->id->toRfc4122(), $scoring->winner->name),
+                $scoring->winnerScore,
+                new PlayerInfoDTO($scoring->looser->id->toRfc4122(), $scoring->looser->name),
+                $scoring->looserScore
+            );
         }, $sessionScorings);
 
-        return $this->json([
-            'sessionScorings' => $scoringsData,
-            'count' => count($scoringsData),
-        ]);
+        $response = new SessionScoringsResponseDTO($scoringsData, count($scoringsData));
+
+        return $this->json($response);
     }
 }

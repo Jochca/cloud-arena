@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller\Service;
 
+use App\Controller\DTO\DashboardResponseDTO;
+use App\Controller\DTO\PlayerBalanceDTO;
+use App\Controller\DTO\TaskCategoriesDTO;
+use App\Controller\DTO\TaskDTO;
 use App\Player\Entity\Player;
 use App\Player\Service\PlayerSaldoProviderInterface;
 use App\Player\Service\PlayerServiceInterface;
@@ -21,7 +25,7 @@ class HomeDashboardService implements HomeDashboardServiceInterface
     ) {
     }
 
-    public function getDashboardData(Player $currentPlayer): array
+    public function getDashboardData(Player $currentPlayer): DashboardResponseDTO
     {
         $session = $currentPlayer->session;
         $otherPlayer = $this->playerService->getOtherPlayerInSession($currentPlayer);
@@ -35,35 +39,38 @@ class HomeDashboardService implements HomeDashboardServiceInterface
         $otherPlayerTasks = $otherPlayer ? $this->taskRepository->findByPlayer($otherPlayer) : [];
         $freeTasks = $this->taskRepository->findFreeTasksBySession($session);
 
-        $tasksData = [
-            'your_tasks' => $this->formatTasksForDisplay($currentPlayerTasks),
-            'free_tasks' => $this->formatTasksForDisplay($freeTasks),
-            'other_player_tasks' => $this->formatTasksForDisplay($otherPlayerTasks),
-        ];
+        $balances = new PlayerBalanceDTO(
+            $currentPlayerBalance,
+            $otherPlayerBalance,
+            $otherPlayer?->name ?? 'Unknown'
+        );
 
-        return [
-            'balances' => [
-                'current_player' => $currentPlayerBalance,
-                'other_player' => $otherPlayerBalance,
-                'other_player_name' => $otherPlayer?->name ?? 'Unknown',
-            ],
-            'tasks' => $tasksData,
-            'round_count' => $roundCount,
-        ];
+        $tasks = new TaskCategoriesDTO(
+            $this->formatTasksForDisplay($currentPlayerTasks),
+            $this->formatTasksForDisplay($freeTasks),
+            $this->formatTasksForDisplay($otherPlayerTasks)
+        );
+
+        return new DashboardResponseDTO($balances, $tasks, $roundCount);
     }
 
+    /**
+     * @param Task[] $tasks
+     *
+     * @return TaskDTO[]
+     */
     private function formatTasksForDisplay(array $tasks): array
     {
         return array_map(function ($task) {
-            return [
-                'id' => (string) $task->id,
-                'name' => $task->name,
-                'description' => $task->description,
-                'value' => $task->value,
-                'status' => $task->status->value,
-                'type' => $task->type->value,
-                'button_text' => $this->getButtonTextForStatus($task->status),
-            ];
+            return new TaskDTO(
+                (string)$task->id,
+                $task->name,
+                $task->description,
+                $task->value,
+                $task->status->value,
+                $task->type->value,
+                $this->getButtonTextForStatus($task->status)
+            );
         }, $tasks);
     }
 

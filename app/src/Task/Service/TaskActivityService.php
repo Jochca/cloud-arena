@@ -22,7 +22,6 @@ class TaskActivityService
 
     public function createTaskActivity(Task $task, Player $player): ?TaskActivity
     {
-        // Check if there's already an active activity for this task and player
         $existingActivity = $this->taskActivityRepository->findActiveActivityForTaskAndPlayer($task, $player);
 
         if ($existingActivity) {

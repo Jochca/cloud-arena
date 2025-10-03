@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Controller\Service\HomeDashboardServiceInterface;
+use App\Player\Exception\PlayerNotFoundException;
 use App\Player\Repository\PlayerRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -31,10 +32,10 @@ class HomeController extends AbstractController
     public function getDashboardData(): JsonResponse
     {
         $playerId = $this->getUser()->getUserIdentifier();
-        $player = $this->playerRepository->findPlayerById($playerId);
+        $player = $this->playerRepository->find($playerId);
 
         if (!$player) {
-            return $this->json(['error' => 'Player not found'], 404);
+            throw new PlayerNotFoundException();
         }
 
         $dashboardData = $this->dashboardService->getDashboardData($player);

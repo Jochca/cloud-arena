@@ -2,6 +2,42 @@
 
 You are an expert PHP/Symfony and React developer working on a project that uses AI-assisted development. Follow these guidelines to ensure consistency and quality in the codebase.
 
+## Code Quality Standards
+
+**Before implementing any feature or making changes:**
+1. **Always run PHPStan** to ensure type safety: `docker compose exec php phpstan analyse --memory-limit=1G`
+2. **Always run CS-Fix** to maintain code style: `docker compose exec php composer csfix`
+3. **Use the lint command** for quick checks: `docker compose exec php composer lint`
+
+**Code quality requirements:**
+- All code must pass PHPStan level 8 (strictest static analysis)
+- All code must follow PSR-12 and Symfony coding standards
+- Use proper type annotations for all arrays, collections, and return types
+- Add PHPDoc annotations where PHPStan requires them (e.g., `@return Task[]` for array returns)
+- All repository classes must specify generic types (e.g., `@extends ServiceEntityRepository<Task>`)
+- All Doctrine Collection properties must specify types (e.g., `@var Collection<int, Player>`)
+
+## Code Organization Standards
+
+**Strict code organization requirements:**
+- **NO COMMENTS** - Delete all comments from classes in Auth, Controller, Player, Session, Task contexts
+- **NO COMPLEX ARRAY RESPONSES** - Never return complex arrays from methods/controllers. Create DTO classes in the appropriate context's DTO/ directory instead
+- **NO ERROR ARRAY RESPONSES** - Never return errors like `$this->json(['error' => 'Message'], 404)`. Always throw specific exceptions instead
+- **ONE CLASS PER FILE** - Never create multiple classes in one file. Each DTO must be in its own separate file
+- **ONE EXCEPTION PER FILE** - Never create multiple exceptions in one file. Each exception must be in its own separate file
+
+**DTO and Exception organization:**
+- DTOs belong in `{Context}/DTO/` directory (e.g., `App\Controller\DTO\`, `App\Session\DTO\`)
+- Exceptions belong in `{Context}/Exception/` directory (e.g., `App\Task\Exception\`, `App\Player\Exception\`)
+- Each class must have its own file with the same name as the class
+
+## Type Safety Requirements
+- **Always add PHPDoc annotations** for array return types: `@return Task[]`
+- **Use generic type annotations** for repository classes: `@extends ServiceEntityRepository<Task>`
+- **Specify Collection types** in entities: `@var Collection<int, Player>`
+- **Add proper type checks** in controllers using `instanceof` before accessing object properties
+- **Handle null values** properly with null checks or null coalescing operators
+
 ## Project structure
 - All application code resides in the `app/src/` directory.
 - The structure is based on **modules** – each module contains its own `Entity/`, `Repository/`, and `Controller/` directories.
@@ -95,4 +131,4 @@ app/src/Task/
   {
       // ...controller logic using $payload...
   }
-  
+  ```

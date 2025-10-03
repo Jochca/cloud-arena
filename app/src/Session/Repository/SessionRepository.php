@@ -17,8 +17,6 @@ class SessionRepository implements SessionRepositoryInterface
 
     public function findSessionByPlayer(Player $player): ?Session
     {
-        // Since Player has a ManyToOne relationship with Session,
-        // we can directly access the session from the player
         return $player->session;
     }
 
@@ -34,14 +32,12 @@ class SessionRepository implements SessionRepositoryInterface
 
     public function findSessionScoringsByPlayer(Player $player): array
     {
-        // First find the session for this player
         $session = $this->findSessionByPlayer($player);
 
         if (!$session) {
             return [];
         }
 
-        // Then find all SessionScorings for that session
         return $this->entityManager->getRepository(SessionScoring::class)
             ->findBy(['session' => $session], ['dateStart' => 'DESC']);
     }

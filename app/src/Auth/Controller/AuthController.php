@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Auth\Controller;
 
+use App\Auth\DTO\LoginResponseDTO;
+use App\Auth\Exception\InvalidKeyException;
 use App\Session\Payload\LoginPayload;
 use App\Session\Service\AuthenticationServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,12 +26,11 @@ class AuthController extends AbstractController
         $token = $this->authenticationService->authenticateByKey($payload->key);
 
         if (!$token) {
-            return $this->json(['error' => 'Invalid key'], 401);
+            throw new InvalidKeyException();
         }
 
-        return $this->json([
-            'token' => $token,
-            'message' => 'Authentication successful',
-        ]);
+        $response = new LoginResponseDTO($token, 'Authentication successful');
+
+        return $this->json($response);
     }
 }
