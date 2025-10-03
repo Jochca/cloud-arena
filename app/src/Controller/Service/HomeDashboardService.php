@@ -17,8 +17,9 @@ class HomeDashboardService implements HomeDashboardServiceInterface
         private PlayerServiceInterface $playerService,
         private SessionRepositoryInterface $sessionRepository,
         private TaskRepositoryInterface $taskRepository,
-        private PlayerSaldoProviderInterface $playerSaldoProvider
-    ) {}
+        private PlayerSaldoProviderInterface $playerSaldoProvider,
+    ) {
+    }
 
     public function getDashboardData(Player $currentPlayer): array
     {
@@ -37,23 +38,23 @@ class HomeDashboardService implements HomeDashboardServiceInterface
         $tasksData = [
             'your_tasks' => $this->formatTasksForDisplay($currentPlayerTasks),
             'free_tasks' => $this->formatTasksForDisplay($freeTasks),
-            'other_player_tasks' => $this->formatTasksForDisplay($otherPlayerTasks)
+            'other_player_tasks' => $this->formatTasksForDisplay($otherPlayerTasks),
         ];
 
         return [
             'balances' => [
                 'current_player' => $currentPlayerBalance,
                 'other_player' => $otherPlayerBalance,
-                'other_player_name' => $otherPlayer?->name ?? 'Unknown'
+                'other_player_name' => $otherPlayer?->name ?? 'Unknown',
             ],
             'tasks' => $tasksData,
-            'round_count' => $roundCount
+            'round_count' => $roundCount,
         ];
     }
 
     private function formatTasksForDisplay(array $tasks): array
     {
-        return array_map(function($task) {
+        return array_map(function ($task) {
             return [
                 'id' => (string) $task->id,
                 'name' => $task->name,
@@ -61,17 +62,17 @@ class HomeDashboardService implements HomeDashboardServiceInterface
                 'value' => $task->value,
                 'status' => $task->status->value,
                 'type' => $task->type->value,
-                'button_text' => $this->getButtonTextForStatus($task->status)
+                'button_text' => $this->getButtonTextForStatus($task->status),
             ];
         }, $tasks);
     }
 
     private function getButtonTextForStatus(TaskStatus $status): string
     {
-        return match($status) {
+        return match ($status) {
             TaskStatus::Pending => 'Start',
             TaskStatus::InProgress => 'Complete',
-            TaskStatus::Completed => 'Completed'
+            TaskStatus::Completed => 'Completed',
         };
     }
 }

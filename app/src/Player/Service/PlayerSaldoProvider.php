@@ -14,8 +14,9 @@ class PlayerSaldoProvider implements PlayerSaldoProviderInterface
 {
     public function __construct(
         private readonly TaskRepositoryInterface $taskRepository,
-        private readonly TaskActivityRepositoryInterface $taskActivityRepository
-    ) {}
+        private readonly TaskActivityRepositoryInterface $taskActivityRepository,
+    ) {
+    }
 
     public function calculateSaldo(Player $player): int
     {
@@ -31,24 +32,24 @@ class PlayerSaldoProvider implements PlayerSaldoProviderInterface
 
             if (empty($activities)) {
                 // No activities for this task
-                if ($task->type === TaskType::Duty) {
+                if (TaskType::Duty === $task->type) {
                     // Duties without activities are considered not completed - penalty
                     $saldo -= $taskValue;
                 }
-                // Activities without activities don't affect saldo (no reward, no penalty)
+            // Activities without activities don't affect saldo (no reward, no penalty)
             } else {
                 // Process each activity for this task
                 foreach ($activities as $activity) {
-                    if ($task->type === TaskType::Activity) {
+                    if (TaskType::Activity === $task->type) {
                         // For activities: increase by completed (Finished), decrease by canceled (Expired)
-                        if ($activity->status === ActivityStatus::Finished) {
+                        if (ActivityStatus::Finished === $activity->status) {
                             $saldo += $taskValue;
-                        } elseif ($activity->status === ActivityStatus::Expired) {
+                        } elseif (ActivityStatus::Expired === $activity->status) {
                             $saldo -= $taskValue;
                         }
-                    } elseif ($task->type === TaskType::Duty) {
+                    } elseif (TaskType::Duty === $task->type) {
                         // For duties: decrease by all that were not completed (not Finished)
-                        if ($activity->status !== ActivityStatus::Finished) {
+                        if (ActivityStatus::Finished !== $activity->status) {
                             $saldo -= $taskValue;
                         }
                         // If Finished, no penalty (no positive reward either)

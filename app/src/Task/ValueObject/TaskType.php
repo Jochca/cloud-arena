@@ -9,4 +9,3 @@ enum TaskType: string
     case Duty = 'duty';
     case Activity = 'activity';
 }
-

@@ -7,8 +7,8 @@ namespace App\Tests\Session\Service;
 use App\Session\Repository\SessionPlayerKeyRepositoryInterface;
 use App\Session\Service\AuthenticationService;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
 class AuthenticationServiceTest extends TestCase
 {

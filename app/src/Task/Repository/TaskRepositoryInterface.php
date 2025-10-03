@@ -10,6 +10,8 @@ use App\Session\Entity\Session;
 interface TaskRepositoryInterface
 {
     public function findByPlayer(Player $player): array;
+
     public function findBySession(Session $session): array;
+
     public function findFreeTasksBySession(Session $session): array;
 }

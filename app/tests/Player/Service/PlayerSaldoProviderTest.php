@@ -7,13 +7,12 @@ namespace App\Tests\Player\Service;
 use App\Player\Entity\Player;
 use App\Player\Service\PlayerSaldoProvider;
 use App\Task\Entity\Task;
-use App\Task\Entity\TaskActivity;
 use App\Task\Repository\TaskActivityRepositoryInterface;
 use App\Task\Repository\TaskRepositoryInterface;
 use App\Task\ValueObject\ActivityStatus;
 use App\Task\ValueObject\TaskType;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
 class PlayerSaldoProviderTest extends TestCase
 {
@@ -128,7 +127,8 @@ class PlayerSaldoProviderTest extends TestCase
 
         // Create a mock ID object with equals method
         $task->id = new class {
-            public function equals($other): bool {
+            public function equals($other): bool
+            {
                 return $this === $other;
             }
         };

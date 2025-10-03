@@ -6,18 +6,18 @@ namespace App\Session\Controller;
 
 use App\Player\Repository\PlayerRepository;
 use App\Session\Repository\SessionRepository;
+use App\Task\ValueObject\TaskStatus;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Task\Entity\Task;
-use App\Task\ValueObject\TaskStatus;
 
 class LandingController extends AbstractController
 {
     public function __construct(
         private PlayerRepository $playerRepository,
-        private SessionRepository $sessionRepository
-    ) {}
+        private SessionRepository $sessionRepository,
+    ) {
+    }
 
     #[Route('/home', name: 'landing_index')]
     public function index(): Response
@@ -41,7 +41,7 @@ class LandingController extends AbstractController
         $categorizedTasks = [
             TaskStatus::Pending->value => [],
             TaskStatus::InProgress->value => [],
-            TaskStatus::Completed->value => []
+            TaskStatus::Completed->value => [],
         ];
 
         foreach ($tasks as $task) {

@@ -40,4 +40,3 @@ class SessionPlayerKey
         set(int $value) => $this->key = $value;
     }
 }
-

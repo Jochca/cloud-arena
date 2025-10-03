@@ -10,4 +10,3 @@ enum ActivityStatus: string
     case Finished = 'finished';
     case Expired = 'expired';
 }
-

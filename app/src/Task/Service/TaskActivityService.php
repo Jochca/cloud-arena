@@ -16,8 +16,9 @@ class TaskActivityService
 {
     public function __construct(
         private TaskActivityRepository $taskActivityRepository,
-        private EntityManagerInterface $entityManager
-    ) {}
+        private EntityManagerInterface $entityManager,
+    ) {
+    }
 
     public function createTaskActivity(Task $task, Player $player): ?TaskActivity
     {
@@ -46,7 +47,7 @@ class TaskActivityService
     {
         $activity = $this->taskActivityRepository->findActiveActivityForTaskAndPlayer($task, $player);
 
-        if (!$activity || $activity->status !== ActivityStatus::InProgress) {
+        if (!$activity || ActivityStatus::InProgress !== $activity->status) {
             return null;
         }
 
@@ -63,7 +64,7 @@ class TaskActivityService
     {
         $activity = $this->taskActivityRepository->findActiveActivityForTaskAndPlayer($task, $player);
 
-        if (!$activity || $activity->status !== ActivityStatus::InProgress) {
+        if (!$activity || ActivityStatus::InProgress !== $activity->status) {
             return null;
         }
 

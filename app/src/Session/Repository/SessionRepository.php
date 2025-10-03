@@ -11,7 +11,9 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class SessionRepository implements SessionRepositoryInterface
 {
-    public function __construct(private EntityManagerInterface $entityManager) {}
+    public function __construct(private EntityManagerInterface $entityManager)
+    {
+    }
 
     public function findSessionByPlayer(Player $player): ?Session
     {

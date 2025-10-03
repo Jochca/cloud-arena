@@ -17,15 +17,16 @@ class SessionScoringCreatorService implements SessionScoringCreatorServiceInterf
     public function __construct(
         private readonly SessionRepository $sessionRepository,
         private readonly PlayerSaldoProviderInterface $saldoProvider,
-        private readonly EntityManagerInterface $entityManager
-    ) {}
+        private readonly EntityManagerInterface $entityManager,
+    ) {
+    }
 
     public function createWeeklyScoring(): int
     {
         $today = new \DateTimeImmutable();
 
         // Check if today is Sunday (last day of the week)
-        if ($today->format('w') !== '0') {
+        if ('0' !== $today->format('w')) {
             return 0; // Not Sunday, no scoring created
         }
 
@@ -36,7 +37,7 @@ class SessionScoringCreatorService implements SessionScoringCreatorServiceInterf
             $players = $session->getPlayers()->toArray();
 
             // Skip sessions that don't have exactly 2 players
-            if (count($players) !== 2) {
+            if (2 !== count($players)) {
                 continue;
             }
 
@@ -76,7 +77,7 @@ class SessionScoringCreatorService implements SessionScoringCreatorServiceInterf
             // Link all tasks and activities from this session to the scoring
             $this->linkTasksAndActivitiesToScoring($session, $scoring);
 
-            $scoringCount++;
+            ++$scoringCount;
         }
 
         if ($scoringCount > 0) {

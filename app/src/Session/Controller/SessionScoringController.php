@@ -16,8 +16,9 @@ class SessionScoringController extends AbstractController
 {
     public function __construct(
         private readonly SessionRepository $sessionRepository,
-        private readonly PlayerRepositoryInterface $playerRepository
-    ) {}
+        private readonly PlayerRepositoryInterface $playerRepository,
+    ) {
+    }
 
     #[Route('/scorings', methods: ['GET'])]
     public function getSessionScorings(): JsonResponse
@@ -40,27 +41,27 @@ class SessionScoringController extends AbstractController
         $sessionScorings = $this->sessionRepository->findSessionScoringsByPlayer($player);
 
         // Transform to response format
-        $scoringsData = array_map(function($scoring) {
+        $scoringsData = array_map(function ($scoring) {
             return [
                 'id' => $scoring->id->toRfc4122(),
                 'dateStart' => $scoring->dateStart->format('Y-m-d H:i:s'),
                 'dateEnd' => $scoring->dateEnd->format('Y-m-d H:i:s'),
                 'winner' => [
                     'id' => $scoring->winner->id->toRfc4122(),
-                    'name' => $scoring->winner->name
+                    'name' => $scoring->winner->name,
                 ],
                 'winnerScore' => $scoring->winnerScore,
                 'looser' => [
                     'id' => $scoring->looser->id->toRfc4122(),
-                    'name' => $scoring->looser->name
+                    'name' => $scoring->looser->name,
                 ],
-                'looserScore' => $scoring->looserScore
+                'looserScore' => $scoring->looserScore,
             ];
         }, $sessionScorings);
 
         return $this->json([
             'sessionScorings' => $scoringsData,
-            'count' => count($scoringsData)
+            'count' => count($scoringsData),
         ]);
     }
 }

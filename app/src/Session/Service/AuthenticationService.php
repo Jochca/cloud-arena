@@ -12,8 +12,9 @@ class AuthenticationService implements AuthenticationServiceInterface
 {
     public function __construct(
         private readonly SessionPlayerKeyRepositoryInterface $sessionPlayerKeyRepository,
-        private readonly JWTTokenManagerInterface $jwtManager
-    ) {}
+        private readonly JWTTokenManagerInterface $jwtManager,
+    ) {
+    }
 
     public function authenticateByKey(int $key): ?string
     {

@@ -9,8 +9,8 @@ use App\Task\Service\ActivityExpirationService;
 use App\Task\ValueObject\ActivityStatus;
 use App\Task\ValueObject\TaskStatus;
 use Doctrine\ORM\EntityManagerInterface;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
 class ActivityExpirationServiceTest extends TestCase
 {

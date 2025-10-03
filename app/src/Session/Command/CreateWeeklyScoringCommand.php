@@ -18,7 +18,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class CreateWeeklyScoringCommand extends Command
 {
     public function __construct(
-        private readonly SessionScoringCreatorServiceInterface $scoringCreatorService
+        private readonly SessionScoringCreatorServiceInterface $scoringCreatorService,
     ) {
         parent::__construct();
     }
@@ -34,8 +34,9 @@ class CreateWeeklyScoringCommand extends Command
 
         $io->text(sprintf('Today is %s (%s)', $dayOfWeek, $today->format('Y-m-d')));
 
-        if ($today->format('w') !== '0') {
+        if ('0' !== $today->format('w')) {
             $io->info('Scoring creation is only available on Sundays. Skipping...');
+
             return Command::SUCCESS;
         }
 

@@ -10,6 +10,8 @@ use App\Session\Entity\Session;
 interface SessionRepositoryInterface
 {
     public function findSessionByPlayer(Player $player): ?Session;
+
     public function countSessionScorings(Session $session): int;
+
     public function findSessionScoringsByPlayer(Player $player): array;
 }

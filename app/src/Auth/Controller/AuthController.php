@@ -14,8 +14,9 @@ use Symfony\Component\Routing\Attribute\Route;
 class AuthController extends AbstractController
 {
     public function __construct(
-        private readonly AuthenticationServiceInterface $authenticationService
-    ) {}
+        private readonly AuthenticationServiceInterface $authenticationService,
+    ) {
+    }
 
     #[Route('/login', methods: ['POST'])]
     public function login(#[MapRequestPayload] LoginPayload $payload): JsonResponse
@@ -28,7 +29,7 @@ class AuthController extends AbstractController
 
         return $this->json([
             'token' => $token,
-            'message' => 'Authentication successful'
+            'message' => 'Authentication successful',
         ]);
     }
 }

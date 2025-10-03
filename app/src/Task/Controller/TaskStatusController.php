@@ -5,20 +5,18 @@ declare(strict_types=1);
 namespace App\Task\Controller;
 
 use App\Player\Entity\Player;
-use App\Player\Repository\PlayerRepository;
 use App\Player\Repository\PlayerRepositoryInterface;
 use App\Task\Entity\Task;
+use App\Task\Payload\UpdateTaskStatusPayload;
 use App\Task\Repository\TaskRepository;
 use App\Task\Service\TaskActivityService;
 use App\Task\ValueObject\TaskAction;
 use App\Task\ValueObject\TaskStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Task\Payload\UpdateTaskStatusPayload;
 use Symfony\Component\Uid\Uuid;
 
 class TaskStatusController extends AbstractController
@@ -27,8 +25,9 @@ class TaskStatusController extends AbstractController
         private TaskRepository $taskRepository,
         private PlayerRepositoryInterface $playerRepository,
         private TaskActivityService $taskActivityService,
-        private EntityManagerInterface $entityManager
-    ) {}
+        private EntityManagerInterface $entityManager,
+    ) {
+    }
 
     #[Route('/{uuid}', name: 'task_update_status', methods: ['PUT'])]
     public function update(string $uuid, #[MapRequestPayload] UpdateTaskStatusPayload $payload): Response
@@ -62,7 +61,7 @@ class TaskStatusController extends AbstractController
         // Validate action based on current task status
         switch ($action) {
             case TaskAction::Start:
-                if ($task->status !== TaskStatus::Pending) {
+                if (TaskStatus::Pending !== $task->status) {
                     return $this->json(['error' => 'Can only start tasks with pending status.'], Response::HTTP_BAD_REQUEST);
                 }
 
@@ -75,7 +74,7 @@ class TaskStatusController extends AbstractController
                 break;
 
             case TaskAction::Finish:
-                if ($task->status !== TaskStatus::InProgress) {
+                if (TaskStatus::InProgress !== $task->status) {
                     return $this->json(['error' => 'Can only finish tasks with in_progress status.'], Response::HTTP_BAD_REQUEST);
                 }
 
@@ -88,7 +87,7 @@ class TaskStatusController extends AbstractController
                 break;
 
             case TaskAction::Cancel:
-                if ($task->status !== TaskStatus::InProgress) {
+                if (TaskStatus::InProgress !== $task->status) {
                     return $this->json(['error' => 'Can only cancel tasks with in_progress status.'], Response::HTTP_BAD_REQUEST);
                 }
 
@@ -101,7 +100,7 @@ class TaskStatusController extends AbstractController
                 break;
         }
 
-        if($task->player === null) {
+        if (null === $task->player) {
             $task->player = $player;
         } elseif ($task->player->id !== $player->id) {
             return $this->json(['error' => 'You can only modify your own tasks.'], Response::HTTP_FORBIDDEN);

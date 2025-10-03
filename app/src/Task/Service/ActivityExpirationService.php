@@ -13,8 +13,9 @@ class ActivityExpirationService implements ActivityExpirationServiceInterface
 {
     public function __construct(
         private readonly TaskActivityRepositoryInterface $taskActivityRepository,
-        private readonly EntityManagerInterface $entityManager
-    ) {}
+        private readonly EntityManagerInterface $entityManager,
+    ) {
+    }
 
     public function expireActivities(): int
     {
@@ -28,7 +29,7 @@ class ActivityExpirationService implements ActivityExpirationServiceInterface
             // Change related task status to pending
             $activity->task->status = TaskStatus::Pending;
 
-            $expiredCount++;
+            ++$expiredCount;
         }
 
         if ($expiredCount > 0) {

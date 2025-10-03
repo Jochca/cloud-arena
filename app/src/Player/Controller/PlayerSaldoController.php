@@ -16,8 +16,9 @@ class PlayerSaldoController extends AbstractController
 {
     public function __construct(
         private readonly PlayerRepositoryInterface $playerRepository,
-        private readonly PlayerSaldoProviderInterface $saldoProvider
-    ) {}
+        private readonly PlayerSaldoProviderInterface $saldoProvider,
+    ) {
+    }
 
     #[Route('/{uuid}/saldo', methods: ['GET'])]
     public function getSaldo(string $uuid): JsonResponse
@@ -35,7 +36,7 @@ class PlayerSaldoController extends AbstractController
 
         return $this->json([
             'player_id' => $player->id->toRfc4122(),
-            'saldo' => $saldo
+            'saldo' => $saldo,
         ]);
     }
 }

@@ -10,4 +10,3 @@ enum Gender: string
     case Female = 'female';
     case Other = 'other';
 }
-

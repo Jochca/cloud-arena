@@ -18,7 +18,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class ExpireActivitiesCommand extends Command
 {
     public function __construct(
-        private readonly ActivityExpirationServiceInterface $activityExpirationService
+        private readonly ActivityExpirationServiceInterface $activityExpirationService,
     ) {
         parent::__construct();
     }

@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Player\Service;
 
 use App\Player\Entity\Player;
-use App\Session\Entity\SessionScoring;
 use Doctrine\ORM\EntityManagerInterface;
 
 class PlayerService implements PlayerServiceInterface
 {
     public function __construct(
-        private EntityManagerInterface $entityManager
-    ) {}
+        private EntityManagerInterface $entityManager,
+    ) {
+    }
 
     public function getOtherPlayerInSession(Player $currentPlayer): ?Player
     {

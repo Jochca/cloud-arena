@@ -10,7 +10,8 @@ use Doctrine\ORM\EntityRepository;
 
 class PlayerRepository extends EntityRepository implements PlayerRepositoryInterface
 {
-    public function __construct(private EntityManagerInterface $entityManager) {
+    public function __construct(private EntityManagerInterface $entityManager)
+    {
         parent::__construct($entityManager, $entityManager->getClassMetadata(Player::class));
     }
 

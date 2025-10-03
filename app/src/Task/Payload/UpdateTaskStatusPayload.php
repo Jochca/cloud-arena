@@ -18,6 +18,6 @@ class UpdateTaskStatusPayload
 
     public static function allowedActions(): array
     {
-        return array_map(fn(TaskAction $a) => $a->value, TaskAction::cases());
+        return array_map(fn (TaskAction $a) => $a->value, TaskAction::cases());
     }
 }

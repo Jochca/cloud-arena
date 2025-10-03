@@ -11,8 +11,8 @@ use App\Session\Repository\SessionRepository;
 use App\Session\Service\SessionScoringCreatorService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
 class SessionScoringCreatorServiceTest extends TestCase
 {
