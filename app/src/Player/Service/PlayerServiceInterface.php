@@ -8,6 +8,5 @@ use App\Player\Entity\Player;
 
 interface PlayerServiceInterface
 {
-    public function calculatePlayerBalance(Player $player): int;
     public function getOtherPlayerInSession(Player $currentPlayer): ?Player;
 }

@@ -8,6 +8,7 @@ use App\Player\Service\PlayerSaldoProviderInterface;
 use App\Session\Entity\Session;
 use App\Session\Entity\SessionScoring;
 use App\Session\Repository\SessionRepository;
+use App\Task\ValueObject\TaskStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Uid\Uuid;
 
@@ -87,14 +88,11 @@ class SessionScoringCreatorService implements SessionScoringCreatorServiceInterf
 
     private function linkTasksAndActivitiesToScoring(Session $session, SessionScoring $scoring): void
     {
-        // Get all tasks from the session
         $tasks = $session->getTasks()->toArray();
 
         foreach ($tasks as $task) {
-            // Link task to scoring
-            $task->scoring = $scoring;
+            $task->status = TaskStatus::Pending;
 
-            // Get all activities for this task and link them to scoring
             $activities = $task->getActivities()->toArray();
             foreach ($activities as $activity) {
                 $activity->scoring = $scoring;

@@ -101,6 +101,12 @@ class TaskStatusController extends AbstractController
                 break;
         }
 
+        if($task->player === null) {
+            $task->player = $player;
+        } elseif ($task->player->id !== $player->id) {
+            return $this->json(['error' => 'You can only modify your own tasks.'], Response::HTTP_FORBIDDEN);
+        }
+
         $this->entityManager->persist($task);
         $this->entityManager->flush();
 

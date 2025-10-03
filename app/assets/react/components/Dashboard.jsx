@@ -4,6 +4,7 @@ export default function Dashboard() {
     const [dashboardData, setDashboardData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
+    const [updatingTasks, setUpdatingTasks] = useState(new Set());
 
     useEffect(() => {
         fetchDashboardData();
@@ -40,9 +41,90 @@ export default function Dashboard() {
         }
     };
 
-    const handleTaskAction = async (taskId, status) => {
-        // TODO: Implement task status update API call
-        console.log(`Task ${taskId} action for status ${status}`);
+    const getActionForStatus = (status) => {
+        switch (status) {
+            case 'pending':
+                return 'start';
+            case 'in_progress':
+                return 'finish';
+            default:
+                return null;
+        }
+    };
+
+    const getNewStatusForAction = (action) => {
+        switch (action) {
+            case 'start':
+                return 'in_progress';
+            case 'finish':
+                return 'completed';
+            case 'cancel':
+                return 'pending';
+            default:
+                return null;
+        }
+    };
+
+    const getButtonTextForStatus = (status) => {
+        switch (status) {
+            case 'pending':
+                return 'Start';
+            case 'in_progress':
+                return 'Complete';
+            default:
+                return '';
+        }
+    };
+
+    const handleTaskAction = async (taskId, currentStatus) => {
+        const action = getActionForStatus(currentStatus);
+        if (!action) {
+            console.error('No valid action for status:', currentStatus);
+            return;
+        }
+
+        // Add task to updating state
+        setUpdatingTasks(prev => new Set([...prev, taskId]));
+
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                setError('Not authenticated');
+                return;
+            }
+
+            const response = await fetch(`/api/task/${taskId}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ action })
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                console.log('Task updated successfully:', result.message);
+
+                // Refresh entire dashboard data to get updated balances
+                await fetchDashboardData();
+
+                setError('');
+            } else {
+                const errorData = await response.json();
+                setError(errorData.error || 'Failed to update task status');
+            }
+        } catch (err) {
+            console.error('Error updating task:', err);
+            setError('Network error while updating task');
+        } finally {
+            // Remove task from updating state
+            setUpdatingTasks(prev => {
+                const newSet = new Set(prev);
+                newSet.delete(taskId);
+                return newSet;
+            });
+        }
     };
 
     if (isLoading) {
@@ -84,6 +166,9 @@ export default function Dashboard() {
                                     <h4>{task.name}</h4>
                                     <p>{task.description}</p>
                                     <span className="task-value">Value: {task.value}</span>
+                                    <span className={`task-type type-${task.type}`}>
+                                        Type: {task.type.charAt(0).toUpperCase() + task.type.slice(1)}
+                                    </span>
                                     <span className={`task-status status-${task.status}`}>
                                         Status: {task.status.replace('_', ' ')}
                                     </span>
@@ -92,6 +177,7 @@ export default function Dashboard() {
                                     <button
                                         className={`task-button ${task.status}`}
                                         onClick={() => handleTaskAction(task.id, task.status)}
+                                        disabled={updatingTasks.has(task.id)}
                                     >
                                         {task.button_text}
                                     </button>
@@ -111,6 +197,9 @@ export default function Dashboard() {
                                     <h4>{task.name}</h4>
                                     <p>{task.description}</p>
                                     <span className="task-value">Value: {task.value}</span>
+                                    <span className={`task-type type-${task.type}`}>
+                                        Type: {task.type.charAt(0).toUpperCase() + task.type.slice(1)}
+                                    </span>
                                     <span className={`task-status status-${task.status}`}>
                                         Status: {task.status.replace('_', ' ')}
                                     </span>
@@ -118,6 +207,7 @@ export default function Dashboard() {
                                 <button
                                     className={`task-button ${task.status}`}
                                     onClick={() => handleTaskAction(task.id, task.status)}
+                                    disabled={updatingTasks.has(task.id)}
                                 >
                                     {task.button_text}
                                 </button>
@@ -136,6 +226,9 @@ export default function Dashboard() {
                                     <h4>{task.name}</h4>
                                     <p>{task.description}</p>
                                     <span className="task-value">Value: {task.value}</span>
+                                    <span className={`task-type type-${task.type}`}>
+                                        Type: {task.type.charAt(0).toUpperCase() + task.type.slice(1)}
+                                    </span>
                                     <span className={`task-status status-${task.status}`}>
                                         Status: {task.status.replace('_', ' ')}
                                     </span>

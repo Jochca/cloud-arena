@@ -1,0 +1,7 @@
+name: React Task Status Update Functionality
+task: CAR-24
+description: Implement React functionality to change task statuses using the existing task_update_status endpoint with real-time UI updates
+date: 2025-10-03
+content: |
+  Implement react functionality to change tasks statuses using already imlemented task_update_status endpoint. Remember to change displayed status after succesfull API call
+

@@ -30,7 +30,6 @@ class HomeController extends AbstractController
     #[IsGranted('ROLE_PLAYER')]
     public function getDashboardData(): JsonResponse
     {
-        // Get the current player ID from JWT token
         $playerId = $this->getUser()->getUserIdentifier();
         $player = $this->playerRepository->findPlayerById($playerId);
 

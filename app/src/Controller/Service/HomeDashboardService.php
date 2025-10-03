@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Service;
 
 use App\Player\Entity\Player;
+use App\Player\Service\PlayerSaldoProviderInterface;
 use App\Player\Service\PlayerServiceInterface;
 use App\Session\Repository\SessionRepositoryInterface;
 use App\Task\Repository\TaskRepositoryInterface;
@@ -15,7 +16,8 @@ class HomeDashboardService implements HomeDashboardServiceInterface
     public function __construct(
         private PlayerServiceInterface $playerService,
         private SessionRepositoryInterface $sessionRepository,
-        private TaskRepositoryInterface $taskRepository
+        private TaskRepositoryInterface $taskRepository,
+        private PlayerSaldoProviderInterface $playerSaldoProvider
     ) {}
 
     public function getDashboardData(Player $currentPlayer): array
@@ -23,20 +25,15 @@ class HomeDashboardService implements HomeDashboardServiceInterface
         $session = $currentPlayer->session;
         $otherPlayer = $this->playerService->getOtherPlayerInSession($currentPlayer);
 
-        // Calculate balances
-        $currentPlayerBalance = $this->playerService->calculatePlayerBalance($currentPlayer);
-        $otherPlayerBalance = $otherPlayer ? $this->playerService->calculatePlayerBalance($otherPlayer) : 0;
+        $currentPlayerBalance = $this->playerSaldoProvider->calculateSaldo($currentPlayer);
+        $otherPlayerBalance = $otherPlayer ? $this->playerSaldoProvider->calculateSaldo($otherPlayer) : 0;
 
-        // Get round count (number of session scorings + 1)
         $roundCount = $this->sessionRepository->countSessionScorings($session) + 1;
 
-        // Get all tasks and categorize them
-        $allTasks = $this->taskRepository->findBySession($session);
         $currentPlayerTasks = $this->taskRepository->findByPlayer($currentPlayer);
         $otherPlayerTasks = $otherPlayer ? $this->taskRepository->findByPlayer($otherPlayer) : [];
         $freeTasks = $this->taskRepository->findFreeTasksBySession($session);
 
-        // Convert tasks to arrays with button text
         $tasksData = [
             'your_tasks' => $this->formatTasksForDisplay($currentPlayerTasks),
             'free_tasks' => $this->formatTasksForDisplay($freeTasks),
@@ -63,6 +60,7 @@ class HomeDashboardService implements HomeDashboardServiceInterface
                 'description' => $task->description,
                 'value' => $task->value,
                 'status' => $task->status->value,
+                'type' => $task->type->value,
                 'button_text' => $this->getButtonTextForStatus($task->status)
             ];
         }, $tasks);
