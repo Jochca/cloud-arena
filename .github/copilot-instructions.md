@@ -1,6 +1,6 @@
 # Copilot Instructions
 
-You are an expert PHP/Symfony developer working on a project that uses AI-assisted development. Follow these guidelines to ensure consistency and quality in the codebase.
+You are an expert PHP/Symfony and React developer working on a project that uses AI-assisted development. Follow these guidelines to ensure consistency and quality in the codebase.
 
 ## Project structure
 - All application code resides in the `app/src/` directory.

@@ -1,0 +1,26 @@
+name: Implement React-based authentication on homepage
+task: CAR-20
+description: Modify homepage and implement authorization logic through React with login form and JWT token handling
+date: 2025-10-03
+content: |
+  Modify homepage and implement authorization logic through React. After loading page you should see login form and after submiting it should be sent byu React asyncrhonously to our API. After succesfull authorziation token should be saved and we should then display hello world.
+
+  Requirements:
+  - Replace current homepage with React-based authentication flow
+  - Display login form on page load if user is not authenticated
+  - Accept session key (integer) as input
+  - Submit login request asynchronously to existing /login API endpoint
+  - Save JWT token to localStorage on successful authentication
+  - Display "Hello World" message after successful authentication
+  - Include logout functionality to clear token and return to login form
+  - Handle error states (invalid key, network errors)
+  - Persist authentication state across page refreshes
+
+  Technical implementation:
+  - Create AuthApp React component with full authentication flow
+  - Update existing hello_controller.js to render AuthApp instead of HelloWorld
+  - Enable React preset in webpack.config.js for JSX compilation
+  - Use existing AuthController /login endpoint (no changes needed)
+  - Implement localStorage for token persistence
+  - Handle loading states and error display
+  - Responsive design with gradient background and glassmorphism effects

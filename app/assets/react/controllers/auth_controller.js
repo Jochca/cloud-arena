@@ -5,8 +5,6 @@ import AuthApp from '../react/components/AuthApp';
 
 export default class extends Controller {
     connect() {
-        console.log('Hello from React Stimulus controller!');
-
         const root = createRoot(this.element);
         root.render(React.createElement(AuthApp));
     }
