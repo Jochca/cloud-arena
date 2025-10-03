@@ -31,3 +31,9 @@ services:
     App\Session\Service\SessionScoringCreatorServiceInterface: '@App\Session\Service\SessionScoringCreatorService'
     App\Session\Repository\SessionPlayerKeyRepositoryInterface: '@App\Session\Repository\SessionPlayerKeyRepository'
     App\Session\Service\AuthenticationServiceInterface: '@App\Session\Service\AuthenticationService'
+
+    # New services for CAR-22
+    App\Player\Repository\PlayerRepositoryInterface: '@App\Player\Repository\PlayerRepository'
+    App\Player\Service\PlayerServiceInterface: '@App\Player\Service\PlayerService'
+    App\Session\Repository\SessionRepositoryInterface: '@App\Session\Repository\SessionRepository'
+    App\Controller\Service\HomeDashboardServiceInterface: '@App\Controller\Service\HomeDashboardService'

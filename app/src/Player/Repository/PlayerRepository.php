@@ -16,7 +16,6 @@ class PlayerRepository extends EntityRepository implements PlayerRepositoryInter
 
     public function findPlayerById(string $id): ?Player
     {
-        return $this->entityManager->getRepository(Player::class)->find($id);
+        return $this->find($id);
     }
 }
-

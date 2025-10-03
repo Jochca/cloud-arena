@@ -1,0 +1,10 @@
+name: Home Dashboard Implementation
+task: CAR-22 CAR-21 CAR-25
+description: Implement dashboard data retrieval and React display for player balances, tasks, and round count
+date: 2025-10-03
+content: |
+  In HomeController retrieve some data, then pass it to the view and display in react. Data should contain:
+  - Saldo of both players (first should be display like "Your balance is:" and for the second player "The *player name* balance is:")
+  - All the tasks (when displaying they sould be categorized by Your tasks, Free tasks, *second players name"'s tasks, all of them should also contain actual status nad a button which valuve should depend on status, e.g when task is pending button should say "start" and if its in_progress button should say "complete")
+  - Number of the actual "round", it should just be count of all scorings in given session + 1 (displayed like "It's *count* week of the game!")
+

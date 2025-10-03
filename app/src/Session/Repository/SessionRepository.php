@@ -9,7 +9,7 @@ use App\Session\Entity\Session;
 use App\Session\Entity\SessionScoring;
 use Doctrine\ORM\EntityManagerInterface;
 
-class SessionRepository
+class SessionRepository implements SessionRepositoryInterface
 {
     public function __construct(private EntityManagerInterface $entityManager) {}
 

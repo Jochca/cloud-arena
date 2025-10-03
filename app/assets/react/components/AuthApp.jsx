@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Dashboard from './Dashboard';
 
 export default function AuthApp() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -57,47 +58,27 @@ export default function AuthApp() {
 
     if (isAuthenticated) {
         return (
-            <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '100vh',
-                fontFamily: 'Arial, sans-serif',
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                color: 'white',
-                margin: 0
-            }}>
-                <div style={{
-                    textAlign: 'center',
-                    padding: '2rem',
-                    borderRadius: '10px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                    backdropFilter: 'blur(10px)',
-                    boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)'
-                }}>
-                    <h1>🚀 Hello World!</h1>
-                    <p style={{ fontSize: '1.2rem', marginTop: '1rem' }}>
-                        Welcome to Cloud Arena
-                    </p>
-                    <p style={{ fontSize: '0.9rem', marginTop: '1rem', opacity: 0.8 }}>
-                        You are successfully authenticated!
-                    </p>
-                    <button
-                        onClick={handleLogout}
-                        style={{
-                            marginTop: '1rem',
-                            padding: '0.5rem 1rem',
-                            backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '5px',
-                            cursor: 'pointer',
-                            fontSize: '1rem'
-                        }}
-                    >
-                        Logout
-                    </button>
-                </div>
+            <div style={{ position: 'relative', height: '100vh' }}>
+                <button
+                    onClick={handleLogout}
+                    style={{
+                        position: 'absolute',
+                        top: '1rem',
+                        right: '1rem',
+                        padding: '0.5rem 1rem',
+                        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                        fontSize: '1rem',
+                        zIndex: 1000
+                    }}
+                >
+                    Logout
+                </button>
+
+                <Dashboard />
             </div>
         );
     }
