@@ -5,6 +5,9 @@ export default function Dashboard() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
     const [updatingTasks, setUpdatingTasks] = useState(new Set());
+    const [showResults, setShowResults] = useState(false);
+    const [scoringsData, setScoringsData] = useState(null);
+    const [loadingResults, setLoadingResults] = useState(false);
 
     useEffect(() => {
         fetchDashboardData();
@@ -38,6 +41,38 @@ export default function Dashboard() {
             setError('Network error');
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const fetchScorings = async () => {
+        setLoadingResults(true);
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                setError('Not authenticated');
+                return;
+            }
+
+            const response = await fetch('/api/session/scorings', {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setScoringsData(data);
+                setShowResults(true);
+                setError('');
+            } else {
+                setError('Failed to load results');
+            }
+        } catch (err) {
+            console.error('Error fetching scorings:', err);
+            setError('Network error while loading results');
+        } finally {
+            setLoadingResults(false);
         }
     };
 
@@ -125,6 +160,11 @@ export default function Dashboard() {
                 return newSet;
             });
         }
+    };
+
+    const closeResults = () => {
+        setShowResults(false);
+        setScoringsData(null);
     };
 
     if (isLoading) {
@@ -240,6 +280,62 @@ export default function Dashboard() {
                     </div>
                 </div>
             </div>
+
+            <div className="results-section">
+                <button
+                    className="see-results-button"
+                    onClick={fetchScorings}
+                    disabled={loadingResults}
+                >
+                    {loadingResults ? 'Loading results...' : 'See results'}
+                </button>
+            </div>
+
+            {showResults && scoringsData && (
+                <div className="modal-overlay" onClick={closeResults}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h3>Game Results</h3>
+                            <button className="modal-close" onClick={closeResults}>×</button>
+                        </div>
+                        <div className="modal-body">
+                            {scoringsData.count === 0 ? (
+                                <p>No game results yet.</p>
+                            ) : (
+                                <>
+                                    <p className="results-summary">
+                                        Total completed weeks: {scoringsData.count}
+                                    </p>
+                                    <div className="scorings-list">
+                                        {scoringsData.sessionScorings.map((scoring, index) => (
+                                            <div key={scoring.id} className="scoring-item">
+                                                <div className="scoring-header">
+                                                    <h4>Week {index + 1}</h4>
+                                                    <span className="scoring-date">
+                                                        {new Date(scoring.dateStart).toLocaleDateString()} - {new Date(scoring.dateEnd).toLocaleDateString()}
+                                                    </span>
+                                                </div>
+                                                <div className="scoring-details">
+                                                    <div className="winner-section">
+                                                        <span className="winner-label">Winner:</span>
+                                                        <span className="winner-name">{scoring.winner.name}</span>
+                                                        <span className="winner-score">{scoring.winnerScore} points</span>
+                                                    </div>
+                                                    <div className="loser-section">
+                                                        <span className="loser-label">Runner-up:</span>
+                                                        <span className="loser-name">{scoring.looser.name}</span>
+                                                        <span className="loser-score">{scoring.looserScore} points</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

@@ -1,0 +1,7 @@
+name: See Results Button Implementation
+task: CAR-23
+description: Implement "See results" button that displays scorings from /scorings endpoint in a modal
+date: 2025-10-03
+content: |
+  Implement "See results" button that will display scorings from /scorings endpoint
+
